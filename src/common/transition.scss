@@ -1,0 +1,25 @@
+/** 透明度渐变动画 start **/
+.v-fade-enter-active,
+.v-fade-leave-active{
+    opacity: 1;
+    transition: opacity .3s;
+}
+.v-fade-enter,
+.v-fade-leave-to{
+    opacity: 0;
+}
+/** 透明度渐变动画 end **/
+
+/** 从上至下展开动画 start 需要设置元素transform-origin **/
+.y-zoom-in-top-enter-active,
+.y-zoom-in-top-leave-active{
+    opacity: 1;
+    transform: scaleY(1);
+    transition: all .3s;
+}
+.y-zoom-in-top-enter,
+.y-zoom-in-top-leave-to{
+    opacity: 0;
+    transform: scaleY(0);
+}
+/** 从上至下展开动画 end **/
