@@ -132,7 +132,7 @@ export default {
                 }
             }
             if (rule.max) {
-                if (!validator.maxLimit(this.value), rule) {
+                if (!validator.maxLimit(this.value, rule)) {
                     validatedState = {
                         error: true,
                         message: rule.message || `超过最大限制${rule.max}`
@@ -140,7 +140,7 @@ export default {
                 }
             }
             if (rule.min) {
-                if (!validator.maxLimit(this.value), rule) {
+                if (!validator.minLimit(this.value, rule)) {
                     validatedState = {
                         error: true,
                         message: rule.message || `不可小于最小限制${rule.min}`

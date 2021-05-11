@@ -1,6 +1,16 @@
 <template>
     <div class="y-tree">
-        <tree-trunk v-for="(trunk, i) in data" :key="i" :trunk-data="trunk" :childrenPath="childrenPath" :labelPath="labelPath" :valuePath="valuePath" :check-strict="checkStrict" :optional="optional" :checked-value="checkedValue" :node-content="nodeContent"></tree-trunk>
+        <tree-trunk 
+            v-for="(trunk, i) in data"
+            :key="i"
+            :trunk-data="trunk"
+            :childrenPath="childrenPath"
+            :labelPath="labelPath"
+            :valuePath="valuePath"
+            :check-strict="checkStrict" 
+            :optional="optional"
+            :node-content="nodeContent"
+        ></tree-trunk>
     </div>
 </template>
 
@@ -43,7 +53,7 @@ export default {
             default: 'label'
         },
         valuePath: {
-            type: String,
+            type: String | Number,
             default: 'value'
         },
         checkStrict: {
@@ -54,7 +64,7 @@ export default {
             type: Boolean,
             default: false
         },
-        checkedValue: {
+        value: {
             type: [String, Array],
         },
         nodeContent: {
@@ -70,19 +80,26 @@ export default {
     mounted() {
         console.log(this);
     },
+    watch: {
+        value: {
+            handler(nVal, oVal){
+                this.setCheckedVal(nVal)
+            }
+        }
+    },
     created() {
         const changeCheckedValue = (value, flag) => {
             if (flag) {
-                if (this.checkedValue && Array.isArray(this.checkedValue)) {
-                    this.checkedValue.push(value)
-                } else if (!this.checkedValue) {
-                    this.checkedValue = value
+                if (this.value && Array.isArray(this.value)) {
+                    this.value.push(value)
+                } else if (!this.value) {
+                    this.value = value
                 }
             } else {
-                if (this.checkedValue && Array.isArray(this.checkedValue)) {
-                    this.checkedValue.splice([this.checkedValue].indexOf(value))
-                } else if (typeof this.checkedValue === 'string') {
-                    this.checkedValue = undefined
+                if (this.value && Array.isArray(this.value)) {
+                    this.value.splice(this.value.indexOf(value), 1)
+                } else if (typeof this.value === 'string') {
+                    this.value = undefined
                 }
             }
         }
@@ -112,26 +129,27 @@ export default {
                             parent.checked = parentCheckedRes;
                             changeCheckedValue(parent.value, flag)
                         }
-                        setDeepParentChecked(parent)
+                        setDeepParentChecked(parent, flag)
                     }
                 }
                 setDeepChildChecked(trunk, checked)
                 setDeepParentChecked(trunk, checked)
             }
 
-
-            this.$emit('change', this.checkedValue)
+            this.$emit('change', this.value)
+            this.$emit('input', this.value)
         })
     },
     data() {
         let treeData = this.treeData;
+        //初始化树节点数据
         walkTree(treeData, this.childrenPath, 1, null, (trunk, level, parent) => {
             //在父组件中定义的treedData 已被添加_ob_ 属性，直接添加属性不会添加数据响应式get，set
             this.$set(trunk, 'children', trunk[this.childrenPath])
             this.$set(trunk, 'value', trunk[this.valuePath])
             this.$set(trunk, 'label', trunk[this.labelPath])
             this.$set(trunk, 'level', level)
-            this.$set(trunk, 'checked', [this.checkedValue].indexOf(trunk.value) > -1)
+            this.$set(trunk, 'checked', [this.value].indexOf(trunk.value) > -1)
             trunk.parent = parent
         });
         if (!treeData instanceof Array) {
@@ -144,6 +162,15 @@ export default {
     methods: {
         initTreeData() {
 
+        },
+        setCheckedVal(nVal) {
+            if(typeof nVal !== 'string' && typeof nVal !== 'number' && !Array.isArray(nVal)){
+                throw Error('树节点值必须字符串/数字或数组')
+            }
+            nVal =  Array.isArray(nVal) ? nVal : [nVal];
+            walkTree(this.data, this.childPath, 1, null, (tree, level, parent)=>{
+                this.$set(tree, 'checked', nVal.indexOf(tree[this.valuePath]) > -1)
+            })
         }
     }
 }

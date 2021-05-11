@@ -46,4 +46,6 @@ export default {
     isCardNum,
     isPhoneNum,
     isRequired,
+    maxLimit,
+    minLimit
 }
