@@ -28,7 +28,17 @@
         <!-- <div style="width: 800px;height: 500px">
             <tree-diagram></tree-diagram>
         </div> -->
-        
+        <y-tabs :tabs="[
+            {label: '待办', value: 'tab1'},
+            {label: '已办', value: 'tab2'}
+        ]">
+            <template #tab3>
+                <div>tab1xxxxx</div>
+            </template>
+            <template #tab2>
+                <div>tab2hhh</div>
+            </template>
+        </y-tabs>
     </div>
 </template>
 

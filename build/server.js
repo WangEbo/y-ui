@@ -6,36 +6,41 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
+console.log(resolve('src'));
 
+const babelConfig = {
+    presets: ["@babel/preset-env", "@vue/babel-preset-jsx"]
+}
 module.exports = {
     mode: process.env == 'prod' ? 'production' : 'development',
     devtool: 'source-map',
     entry: resolve('../src/index.js'),   //主文件入口
     output: {           //输出文件路劲
-        path: path.resolve(__dirname, 'dist'),
+        path: resolve('dist'),
         filename: '[name].js'
     },
     module: {            //loader 解析规则
         rules: [
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-
-                }
-            },
             {
                 test: /\.(png|jpe?g|gif|svg)$/,
                 loader: 'url-loader',
 
             },
             {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 loader: 'babel-loader',
                 include: [
-                    resolve('src'),
-                    resolve('test'),
-                ]
+                    resolve('../src'),
+                    resolve('../test'),
+                ],
+                options: babelConfig
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+
+                }
             },
             {
                 test: /\.(woff|ttf|eot|otf)(\?.*)?$/,
@@ -52,7 +57,7 @@ module.exports = {
                         loader: 'sass-resources-loader',
                         //使用  sass-resource-loader 配置 全局scss变量，options下的resources指定全局scss文件路径，须为字符串或数组
                         options: {
-                            resources: [path.resolve(__dirname, '../src/variable.scss')]
+                            resources: [resolve('../src/variable.scss')]
                         }
                     }
                 ]
@@ -69,6 +74,9 @@ module.exports = {
         new FriendlyErrorsPlugin({
             compilationSuccessInfo: {
                 messages: [`Your application is running here: http://localhost:8899`],
+            },
+            onErrors(severity, errors){
+                console.log(errors);
             }
         })
     ],
