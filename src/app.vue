@@ -28,16 +28,16 @@
         <!-- <div style="width: 800px;height: 500px">
             <tree-diagram></tree-diagram>
         </div> -->
-        <y-tabs :tabs="[
-            {label: '待办', value: 'tab1'},
-            {label: '已办', value: 'tab2'}
-        ]">
-            <template #tab3>
-                <div>tab1xxxxx</div>
-            </template>
-            <template #tab2>
-                <div>tab2hhh</div>
-            </template>
+        <y-tabs>
+            <y-panel :key="'1'" :label="'全部订单'">
+                <div>全部东西</div>
+            </y-panel>
+            <y-panel :key="'2'" :label="'待收货'">
+                <div>待收货东西</div>
+            </y-panel>
+            <y-panel :key="'3'" :label="'已完成'">
+                <div>已完成商品</div>
+            </y-panel>
         </y-tabs>
     </div>
 </template>
