@@ -21,20 +21,22 @@ export default {
         }
     },
     render() {
-        console.log(this.$slots);
         let navs = [],panels = [], activeIndex, panelContentStyle={};
+        
+        //获取slots 中的panel vnode
         const panelSlots = this.$slots.default.filter(p=> p.tag == 'y-panel');
         
         this.activeNameProxy = this.activeNameProxy || panelSlots[0].data.attrs.name;
         
         for(let i = 0;i < panelSlots.length;i++){
             const item = panelSlots[i];
-            const { attrs } = item.data
+            const { attrs } = item.data;
+            //提取navs
             navs.push({
                 name: attrs.name,
                 label: attrs.label
             })
-
+            
             let curPanelClass = {
                 'y-panel': true,
             }
@@ -48,7 +50,6 @@ export default {
 
         panelContentStyle['margin-left'] = `-${activeIndex * 100}%`;
         
-
         return (<div class="y-tabs">
             <y-tab-navs
                 navs={navs}
@@ -91,6 +92,8 @@ export default {
 </script>
 
 <style lang="scss">
+.y-tabs{
+    overflow: hidden;
     .tab-content{
         display: flex;
         transition: margin-left .4s ease-in-out;
@@ -100,4 +103,6 @@ export default {
             width: 100%;
         }
     }
+}
+    
 </style>

@@ -28,15 +28,15 @@
         <!-- <div style="width: 800px;height: 500px">
             <tree-diagram></tree-diagram>
         </div> -->
-        <y-tabs>
+        <y-tabs @change="tabChange">
             <y-panel name="1" label="全部订单">
-                <div>全部东西</div>
+                <div>全部东西{{tabText}}</div>
             </y-panel>
             <y-panel name="2" label="待收货">
-                <div>待收货东西</div>
+                <div>待收货东西{{tabText}}</div>
             </y-panel>
             <y-panel name="3" label="已完成">
-                <div>已完成商品</div>
+                <div>已完成商品{{tabText}}</div>
             </y-panel>
         </y-tabs>
     </div>
@@ -168,7 +168,8 @@ export default {
                     {required: true, message: '所选课程为必填项'},
                     {max: 2, message: '最多可选2门课程'}
                 ]
-            }
+            },
+            tabText: ''
         }
     },
     mounted() {
@@ -193,6 +194,9 @@ export default {
         },
         treeSelectChange(value){
             this.checkedValue = value
+        },
+        tabChange(tab){
+            this.tabText = tab.name
         }
     }
 }

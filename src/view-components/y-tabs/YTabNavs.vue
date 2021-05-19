@@ -34,15 +34,24 @@ export default {
 <style lang="scss">
     .y-tab-bars{
         ul{
-            display: inline-block;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 0;
             font-size: 0;
+            position: relative;
+            &::after{
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                z-index: -1;
+                background-color: #ccc;
+            }
             li{
                 display: inline-block;
                 font-size: 14px;
                 padding: 5px 10px;
                 border: 1px solid #ccc;
-                border-bottom: 0;
                 color: #1f1f1f;
                 border-radius: 6px 6px 0 0;
                 cursor: pointer;
