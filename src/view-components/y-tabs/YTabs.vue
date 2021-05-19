@@ -1,11 +1,11 @@
 <script lang="jsx">
-import YtabNavs from './YTabNavs.vue'
+import YTabNavs from './YTabNavs.vue'
 import YTabPanel from './YTabPanel.vue'
 export default {
     name: 'YTabs',
     componentName: 'YTabs',
     components:{
-        YtabNavs,
+        YTabNavs,
         YTabPanel,
     },
     props: {
@@ -13,48 +13,57 @@ export default {
             type: Array,
             require: true
         },
-        activeName: {
-            type: String
-        }
+        activeName: {}
     },
     data(){
         return {
-            navs: []
+            activeNameProxy: ''
         }
     },
     render() {
         console.log(this.$slots);
-        let navs = [],panels = [];
-        const panelSlots = this.$slots.default.map(p=> p.tag == 'y-panel');
+        let navs = [],panels = [], activeIndex, panelContentStyle={};
+        const panelSlots = this.$slots.default.filter(p=> p.tag == 'y-panel');
+        
+        this.activeNameProxy = this.activeNameProxy || panelSlots[0].data.attrs.name;
+        
         for(let i = 0;i < panelSlots.length;i++){
             const item = panelSlots[i];
+            const { attrs } = item.data
             navs.push({
-                name: item.key,
-                label: item.label
+                name: attrs.name,
+                label: attrs.label
             })
 
             let curPanelClass = {
                 'y-panel': true,
-                active: item.name === this.activeName
             }
-            panels.push(<div class={curPanelClass}>{item.$slots.default}</div>)
+            if(attrs.name === this.activeNameProxy){
+                activeIndex = i;
+                curPanelClass.active = true
+            }
+            const panelContent = item.children[0];
+            panels.push(<div class={curPanelClass}>{panelContent}</div>)
         }
-        this.navs = nvas;
+
+        panelContentStyle['margin-left'] = `-${activeIndex * 100}%`;
+        
 
         return (<div class="y-tabs">
-            <y-tab-navs 
-                navs={this.navs}
-                changeTab={this.changeTab}
+            <y-tab-navs
+                navs={navs}
+                activeName={this.activeNameProxy}
+                onChangeTab={this.change}
             ></y-tab-navs>
-            <div class="tab-content">
+            <div class="tab-content" style={panelContentStyle}>
                 {panels}
             </div>
         </div>)
     },
     watch: {
-        activeTab: {
+        activeName: {
             handler(nVal){
-                this.renderContent()
+                this.activeNameProxy = this.nVal
             }
         }
     },
@@ -73,13 +82,22 @@ export default {
         renderContent() {
 
         },
-        changeTab(tab){
-
+        change(tab){
+            this.activeNameProxy = tab.name;
+            this.$emit('change', tab);
         }
     }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+    .tab-content{
+        display: flex;
+        transition: margin-left .4s ease-in-out;
+        width: 100%;
+        .y-panel{
+            flex-shrink: 0;
+            width: 100%;
+        }
+    }
 </style>

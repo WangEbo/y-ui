@@ -29,13 +29,13 @@
             <tree-diagram></tree-diagram>
         </div> -->
         <y-tabs>
-            <y-panel :key="'1'" :label="'全部订单'">
+            <y-panel name="1" label="全部订单">
                 <div>全部东西</div>
             </y-panel>
-            <y-panel :key="'2'" :label="'待收货'">
+            <y-panel name="2" label="待收货">
                 <div>待收货东西</div>
             </y-panel>
-            <y-panel :key="'3'" :label="'已完成'">
+            <y-panel name="3" label="已完成">
                 <div>已完成商品</div>
             </y-panel>
         </y-tabs>
